@@ -12,10 +12,9 @@ public partial class AddNewUser : ContentPage
 	{
 		InitializeComponent();
         jsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "User.json");
-        AgeEntry.TextChanged += Entry_TextChanged;
     }
 
-    private void SubmitClicked(object sender, EventArgs e)
+    private async void SubmitClicked(object sender, EventArgs e)
     {
         User newUser = new User();
         newUser.name = NameEntry.Text;
@@ -31,6 +30,9 @@ public partial class AddNewUser : ContentPage
             string jsonContent = JsonConvert.SerializeObject(users , Formatting.Indented);
 
             File.WriteAllText(jsonFilePath, jsonContent);
+
+
+
         }
         else
         {
@@ -43,26 +45,21 @@ public partial class AddNewUser : ContentPage
             File.WriteAllText(jsonFilePath, updatedJsonData);
         }
 
-        Navigation.PushAsync(new MainPage());
+
+        bool result = await DisplayAlert("Alert", "User added successfully", "OK", "Close");
+
+        if (result)
+        {
+            await Navigation.PushAsync(new MainPage());
+        }
     }
 
-    private void Entry_TextChanged(object sender, TextChangedEventArgs e)
+    private void NumericEntry_TextChanged(object sender, TextChangedEventArgs e)
     {
-        allowNumericInput = true;
-        if (!string.IsNullOrEmpty(e.NewTextValue))
+        if (!string.IsNullOrEmpty(e.NewTextValue) && !e.NewTextValue.All(char.IsDigit))
         {
-            if (allowNumericInput && !char.IsDigit(e.NewTextValue[0]))
-            {
-                // If the first character is not a digit, prevent input
-                
-                AgeEntry.Text = e.OldTextValue;
-            }
-        }
-        else
-        {
-            // Reset the flag if the Entry becomes empty
-            allowNumericInput = true;
+            // Remove non-numeric characters
+            ((Entry)sender).Text = new string(e.NewTextValue.Where(char.IsDigit).ToArray());
         }
     }
-
 }

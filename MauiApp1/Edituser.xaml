@@ -3,29 +3,38 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.Edituser"
              Title="Edituser">
-    
-    <VerticalStackLayout>
-        <Label 
-        Text="Edit User"
-        VerticalOptions="Center" 
-        HorizontalOptions="Center" />
 
-        <HorizontalStackLayout>
+    <VerticalStackLayout VerticalOptions="FillAndExpand"
+                         HorizontalOptions="FillAndExpand">
+
+        <Label Text="Edit User"
+               VerticalOptions="CenterAndExpand"
+               HorizontalOptions="CenterAndExpand" />
+
+        <StackLayout HorizontalOptions="FillAndExpand">
             <Label Text="Name :" />
-            <Entry x:Name="NameEntry" Placeholder="{Binding name}" TextColor="Grey" />
-        </HorizontalStackLayout>
+            <Entry x:Name="NameEntry"
+                   Placeholder="{Binding name}"
+                   TextColor="Grey" Focused="MyEntry_Focused"  />
+        </StackLayout>
 
-        <HorizontalStackLayout>
+        <StackLayout HorizontalOptions="FillAndExpand">
             <Label Text="Email :" />
-            <Entry x:Name="EmailEntry" Placeholder="{Binding email}" TextColor="Grey" />
-        </HorizontalStackLayout>
+            <Entry x:Name="EmailEntry"
+                   Placeholder="{Binding email}"
+                   TextColor="Grey" Focused="MyEntry_Focused"  />
+        </StackLayout>
 
-        <HorizontalStackLayout>
+        <StackLayout HorizontalOptions="FillAndExpand">
             <Label Text="Age :" />
-            <Entry x:Name="AgeEntry" Placeholder="{Binding age}" TextColor="Grey" />
-        </HorizontalStackLayout>
+            <Entry x:Name="AgeEntry"
+                   Placeholder="{Binding age}"
+                   TextColor="Grey" Keyboard="Numeric" TextChanged="NumericEntry_TextChanged" Focused="MyEntry_Focused"  />
+        </StackLayout>
 
-        <Button Text="Save" Clicked="EditUser" />
+        <Button Text="Save"
+                Clicked="EditUser"
+                HorizontalOptions="CenterAndExpand" />
     </VerticalStackLayout>
 
 

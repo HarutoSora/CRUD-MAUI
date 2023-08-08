@@ -17,13 +17,19 @@ public partial class Edituser : ContentPage
         NameEntry.Text = u.name;
         EmailEntry.Text = u.email;
 		AgeEntry.Text = u.age.ToString();
-        AgeEntry.TextChanged += Entry_TextChanged;
     }
 
 
-    private void EditUser(object sender, EventArgs e)
+    private void MyEntry_Focused(object sender, FocusEventArgs e)
     {
+        if (sender is Entry entry)
+        {
+            entry.Text = string.Empty; // Clear the text of the focused Entry
+        }
+    }
 
+    private async void EditUser(object sender, EventArgs e)
+    {
         string jsonData = File.ReadAllText(jsonFilePath);
         List<User> users = JsonConvert.DeserializeObject<List<User>>(jsonData);
 
@@ -40,23 +46,24 @@ public partial class Edituser : ContentPage
             string updatedJsonData = JsonConvert.SerializeObject(users, Formatting.Indented);
             File.WriteAllText(jsonFilePath, updatedJsonData);
         }
-        Navigation.PushAsync(new MainPage());
+
+        bool result = await DisplayAlert("Alert", "User : "+user.name + " was Edited successfully", "OK", "Close");
+
+        if (result)
+        {
+            await Navigation.PushAsync(new MainPage());
+        }
+
+
     }
 
-    private void Entry_TextChanged(object sender, TextChangedEventArgs e)
+
+    private void NumericEntry_TextChanged(object sender, TextChangedEventArgs e)
     {
-        allowNumericInput = true;
-        if (!string.IsNullOrEmpty(e.NewTextValue))
+        if (!string.IsNullOrEmpty(e.NewTextValue) && !e.NewTextValue.All(char.IsDigit))
         {
-            if (allowNumericInput && !char.IsDigit(e.NewTextValue[0]))
-            {                
-                AgeEntry.Text = e.OldTextValue;
-            }
-        }
-        else
-        {
-            allowNumericInput = true;
+            // Remove non-numeric characters
+            ((Entry)sender).Text = new string(e.NewTextValue.Where(char.IsDigit).ToArray());
         }
     }
-
 }

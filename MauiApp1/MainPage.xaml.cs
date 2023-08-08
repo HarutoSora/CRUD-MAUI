@@ -79,25 +79,32 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private void DeleteUser(object sender, EventArgs e)
+    private async void DeleteUser(object sender, EventArgs e)
     {
-        Button button = (Button)sender;
-        User s = (User)button.CommandParameter;
-
-        List<User> users = JsonConvert.DeserializeObject<List<User>>(ReadJSON());
 
 
-        User userToDelete = users.FirstOrDefault(user => user.email == s.email);
+        bool result = await DisplayAlert("Confirm", "Are you sure you want to Delete this User ?", "Yes", "No");
 
-        if (userToDelete != null)
+        if (result)
         {
-            users.Remove(userToDelete);
+            Button button = (Button)sender;
+            User s = (User)button.CommandParameter;
 
-            // Serialize and save the updated data
-            string updatedJsonData = JsonConvert.SerializeObject(users, Formatting.Indented);
-            File.WriteAllText(jsonFilePath, updatedJsonData);
+            List<User> users = JsonConvert.DeserializeObject<List<User>>(ReadJSON());
+
+
+            User userToDelete = users.FirstOrDefault(user => user.email == s.email);
+
+            if (userToDelete != null)
+            {
+                users.Remove(userToDelete);
+
+                // Serialize and save the updated data
+                string updatedJsonData = JsonConvert.SerializeObject(users, Formatting.Indented);
+                File.WriteAllText(jsonFilePath, updatedJsonData);
+            }
+            OnAppearing();
         }
-        OnAppearing();
     }
 
     
